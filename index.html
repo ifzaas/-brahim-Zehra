@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doğru tarihi gir...</title>
+  <style>
+    :root {
+      --bg: #ffe6f1;
+      --card: #ffd3e6;
+      --pink: #ff66a6;
+      --pink-deep: #ff4c96;
+      --pink-light: #ff9ec5;
+      --white: #fff;
+      --shadow: 0 20px 50px rgba(255, 77, 150, .25);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: #ff2a86;
+      background:
+        radial-gradient(1200px 700px at 50% -200px, #fff 0%, var(--bg) 65%),
+        linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      display: grid;
+      place-items: center;
+    }
+    .frame {
+      width: min(38500px, 100vw); /* Çerçeveyi büyüttük ki kalp sığsın */
+      height: min(85vh, 780px);
+      background: var(--card);
+      border-radius: 36px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      padding: 28px 24px 36px;
+    }
+    .title {
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-size: clamp(18px, 2.8vw, 28px);
+      color: #ff3a96;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, .6);
+      margin: 6px 0 10px;
+    }
+    .stage {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+    .lock {
+      position: relative;
+      width: min(38400px, 100vw); /* Kalbi dört kat daha büyüttük */
+      aspect-ratio: 1/0.9;
+      display: block;
+      filter: drop-shadow(0 24px 40px rgba(255, 73, 150, .3));
+    }
+    .heart-svg {
+      position: absolute;
+      inset: 0;
+    }
+    .heart-gloss {
+      position: absolute;
+      left: 14%;
+      top: 41%;
+      width: 22%;
+      height: 16%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .4));
+      border-radius: 60% 40% 55% 45%/60% 55% 45% 40%;
+      transform: rotate(-8deg);
+      filter: blur(1px);
+      opacity: .9;
+      pointer-events: none;
+    }
+    .heart-gloss2 {
+      position: absolute;
+      right: 16%;
+      top: 37%;
+      width: 26%;
+      height: 18%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .4));
+      border-radius: 60% 40% 55% 45%/60% 55% 45% 40%;
+      transform: rotate(12deg);
+      filter: blur(1px);
+      opacity: .6;
+      pointer-events: none;
+    }
+    .dials {
+      position: absolute;
+      left: 50%;
+      top: 60%; /* Kalbin tam ortasında hizalı */
+      translate: -50% -50%;
+      display: flex;
+      gap: 12px;
+    }
+    .dial {
+      width: min(60px, 14vw);
+      height: min(120px, 28vw);
+      background: #ffddea;
+      border-radius: 20px;
+      box-shadow: inset 0 -6px 12px rgba(255, 120, 170, .35), inset 0 6px 10px rgba(255, 255, 255, .85), 0 6px 12px rgba(255, 80, 150, .25);
+      padding: 6px;
+      display: grid;
+      grid-template-rows: 1fr auto 1fr;
+      align-items: center;
+      justify-items: center;
+      position: relative;
+    }
+    .btn {
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      background: radial-gradient(circle at 30% 30%, #ff6fb0, #ff4f9c 60%, #ff2a86);
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, .65), 0 5px 8px rgba(255, 64, 140, .35);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 900;
+      transition: transform .06s ease, box-shadow .12s ease;
+    }
+    .btn:active {
+      transform: translateY(1px) scale(.98);
+      box-shadow: inset 0 1px 4px rgba(255, 255, 255, .6), 0 3px 6px rgba(255, 64, 140, .3);
+    }
+    .value {
+      width: 70%;
+      height: 36px;
+      background: #fff;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: #ff2a86;
+      border: 2px solid #ffc0da;
+      box-shadow: inset 0 3px 6px rgba(255, 160, 200, .4);
+      user-select: none;
+    }
+    .hint {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      translate: -50% 0;
+      width: 90%;
+      text-align: center;
+      font-size: clamp(12px, 2.4vw, 18px);
+      color: #ff3a96;
+      opacity: .85;
+      font-weight: 700;
+    }
+    .unlock .value {
+      animation: flash .9s ease both;
+    }
+    @keyframes flash {
+      0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0), inset 0 6px 10px rgba(255, 160, 200, .4); }
+      40% { box-shadow: 0 0 22px 8px rgba(255, 64, 140, .45), inset 0 0 0 rgba(0, 0, 0, 0); }
+      100% { box-shadow: inset 0 6px 10px rgba(255, 160, 200, .4); }
+    }
+    .header {
+      position: absolute;
+      top: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #ff3a96;
+      font-weight: 900;
+      font-size: clamp(16px, 3vw, 26px);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="header">Doğru tarihi gir...</div>
+    <div class="stage">
+      <div class="lock">
+        <svg class="heart-svg" viewBox="0 0 900 800" width="100%" height="100%" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#ff94c2"/>
+              <stop offset="60%" stop-color="#ff6eb0"/>
+              <stop offset="100%" stop-color="#ff4c96"/>
+            </linearGradient>
+            <radialGradient id="g2" cx="50%" cy="35%" r="70%">
+              <stop offset="0%" stop-color="#ff7fba"/>
+              <stop offset="60%" stop-color="#ff5aa7"/>
+              <stop offset="100%" stop-color="#ff3494"/>
+            </radialGradient>
+          </defs>
+          <path d="M300,250 a150,150 0 0 1 300,0 v180 h-70 v-165 a80,80 0 0 0 -160,0 v165 h-70 z" fill="url(#g1)"/>
+          <path d="M450 340 C 350 250, 160 300, 160 470 C 160 650, 350 720, 450 780 C 550 720, 740 650, 740 470 C 740 300, 550 250, 450 340 Z" fill="url(#g2)"/>
+        </svg>
+        <div class="heart-gloss"></div>
+        <div class="heart-gloss2"></div>
+        <div class="dials" id="dials">
+          <div class="dial" data-type="day">
+            <button class="btn" data-step="up">▲</button>
+            <div class="value" data-role="value">00</div>
+            <button class="btn" data-step="down">▼</button>
+          </div>
+          <div class="dial" data-type="month">
+            <button class="btn" data-step="up">▲</button>
+            <div class="value" data-role="value">00</div>
+            <button class="btn" data-step="down">▼</button>
+          </div>
+          <div class="dial" data-type="year">
+            <button class="btn" data-step="up">▲</button>
+            <div class="value" data-role="value">00</div>
+            <button class="btn" data-step="down">▼</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hint">İpucu: resimlerde</div>
+  </div>
+  <script>
+    const CORRECT = { day: 26, month: 1, year: 25 }; // 26 / 01 / 25
+    const REDIRECT = '1/index.html';
+
+    const pad2 = n => String(n).padStart(2, '0');
+    const ranges = { day: [0, 31], month: [0, 12], year: [0, 99] };
+
+    document.querySelectorAll('.dial').forEach(dial => {
+      const type = dial.dataset.type;
+      const [min, max] = ranges[type];
+      const valEl = dial.querySelector('[data-role="value"]');
+
+      const getVal = () => parseInt(valEl.textContent, 10);
+      const setVal = (n) => { valEl.textContent = pad2(n); check(); };
+
+      const step = (dir) => {
+        const cur = getVal();
+        let next = dir === 'up' ? cur + 1 : cur - 1;
+        if (next > max) next = min;
+        if (next < min) next = max;
+        setVal(next);
+      };
+
+      dial.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', () => step(btn.dataset.step));
+      });
+    });
+
+    function check() {
+      const cur = {
+        day: parseInt(document.querySelector('.dial[data-type="day"] .value').textContent, 10),
+        month: parseInt(document.querySelector('.dial[data-type="month"] .value').textContent, 10),
+        year: parseInt(document.querySelector('.dial[data-type="year"] .value').textContent, 10)
+      };
+      if (cur.day === CORRECT.day && cur.month === CORRECT.month && cur.year === CORRECT.year) {
+        document.getElementById('dials').classList.add('unlock');
+        setTimeout(() => { window.location.href = REDIRECT; }, 650);
+      }
+    }
+  </script>
+</body>
+</html>
